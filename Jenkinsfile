@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        TIMESTAMP = sh(script: 'date +%s', returnStdout: true)
+    }
     stages {
         stage('Unit test') {
             steps {
@@ -17,7 +20,6 @@ pipeline {
         stage('Build container for local test and make a curl test') {
             steps {
                 sh "docker stop product_FirstPipeline || true && docker rm product_FirstPipeline || true"
-                def TIMESTAMP = sh(script: 'date +%s', returnStdout: true)
                 sh "docker build ./ -t exp-product-${TIMESTAMP}:0.0.1"
                 sh "docker run -d --network host --name product_FirstPipeline exp-product-${TIMESTAMP}:0.0.1"
                 echo "Sleep 2 minutes waiting test container start up"
