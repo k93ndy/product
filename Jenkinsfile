@@ -27,7 +27,7 @@ pipeline {
             steps {
                 sh "docker run -d -p 8080:8080 --name product_FirstPipeline ${TESTIMAGE}:${TESTTAG}"
                 echo "Wait fo test container starting up"
-                sh "sleep 2m"
+                sh "sleep 3m"
                 sh "curl -v --fail http://localhost:8080/product/api/product"
             }
             post {
