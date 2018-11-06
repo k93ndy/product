@@ -1,0 +1,45 @@
+  template:
+    metadata:
+      annotations:
+        used-for-rolling-update: "{{ .UnixTimeStamp }}"
+      labels:
+        role: backend
+        app: product
+        type: rest
+        version: v1
+    spec:
+      #initContainers:
+      #  - name: check-sqlproxy-service
+      #    image: busybox
+      #    command: ['sh', '-c', 'until nslookup splitthebill-sqlproxy; do echo waiting for splitthebill-sqlproxy; sleep 2; done;']
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  role: backend
+                  app: product
+                  type: rest
+                  version: v1
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: exp-product 
+          image: asia.gcr.io/arch-project-176305/exp-product:0.0.1.1-alpha
+          imagePullPolicy: Always
+          ports:
+            - name: http-product
+              containerPort: 8080
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1 
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
