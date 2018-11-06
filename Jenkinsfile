@@ -26,7 +26,7 @@ pipeline {
         stage('Start test container and make a curl test') {        
             steps {
                 sh "docker run -d -p 8080:8080 --name product_FirstPipeline ${TESTIMAGE}:${TESTTAG}"
-                echo "Wait fo test container start up"
+                echo "Wait fo test container starting up"
                 sh "sleep 2m"
                 sh "curl -v --fail http://localhost:8080/product/api/product"
             }
@@ -44,6 +44,8 @@ pipeline {
                     image.push()
                 }
                 sh "/home/di_sun/kube_projects/exp/scripts/applydeployment.sh /home/di_sun/kube_projects/exp/deployments/exp-product-v1.tmpl"
+                echo "Wait for deployment upgrading"
+                sh "sleep 1m"
                 sh "curl -v --fail https://test.splitthebill.ml"
             }
         }
