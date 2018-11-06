@@ -39,6 +39,7 @@ pipeline {
         }
         stage('Build container for deploy') {
             steps {
+                sh "sed --in-place s/test-sample-1/exp-sqlproxy/g src/main/resources/application.properties"
                 script {
                     def image = docker.build("${DEPLOYIMAGE}:${DEPLOYTAG}", "-f Dockerfile.deploy .")
                     image.push()
