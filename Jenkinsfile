@@ -15,7 +15,9 @@ pipeline {
         }
         stage('Test container multi stage build') {
             steps {
-                docker.build("${IMAGENAME}-$BUILD_NUMBER", "-f Dockerfile.test .")
+                script {
+                    docker.build("${IMAGENAME}-$BUILD_NUMBER", "-f Dockerfile.test .")
+                }
                 //sh "docker build ./ -t ${IMAGENAME}-$BUILD_NUMBER"
             }
         }
