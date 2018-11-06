@@ -1,30 +1,22 @@
 pipeline {
     agent any
+    environment {
+        IMAGENAME = "exp-product"
+    }
     options {
-        timeout(time: 10, unit: 'MINUTES') 
+        timeout(time: 15, unit: 'MINUTES') 
     }
     stages {
-        stage('Unit test') {
+        stage('Multi stage build') {
             steps {
-                sh "chmod 700 gradlew"
-                sh "./gradlew -v"
-                sh "sed --in-place s/P35537/127.0.0.1/g src/main/resources/application.properties"
-                sh "./gradlew test"
+                //sh "chmod 700 gradlew"
+                sh "sed --in-place s/P35537/test-sample-1/g src/main/resources/application.properties"
+                sh "docker build ./ -t ${IMAGENAME}-$BUILD_NUMBER"
             }
         }
-        stage('Build WAR file') {
+        stage('Build container for local test and make a curl test') {        
             steps {
-                sh "./gradlew bootWar"
-            }
-        }
-        stage('Build container for local test and make a curl test') {
-            environment {
-                IMAGENAME = "exp-product"
-            }
-            steps {
-                sh "docker stop product_FirstPipeline || true && docker rm product_FirstPipeline || true"
-                sh "docker build ./ -t exp-product-$BUILD_NUMBER"
-                sh "docker run -d --network host --name product_FirstPipeline exp-product-$BUILD_NUMBER"
+                sh "docker run -d -p 8080:8080 --name product_FirstPipeline ${IMAGENAME}-$BUILD_NUMBER"
                 echo "Wait fo test container start up"
                 sh "sleep 2m"
                 sh "curl -v --fail http://localhost:8080/product/api/product"
