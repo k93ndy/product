@@ -46,7 +46,9 @@ pipeline {
                 }
                 sh "/home/di_sun/kube_projects/exp/scripts/applydeployment.sh /home/di_sun/kube_projects/exp/deployments/exp-product-v1.tmpl"
                 echo "Wait for deployment upgrading"
-                sh "sleep 1m"
+                sh "sleep 2m"
+                sh "kubectl get pods"
+                sh "kubectl get ep"
                 sh "curl -v --fail https://test.splitthebill.ml"
             }
         }
