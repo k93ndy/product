@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Multi stage build') {
             steps {
-                //sh "chmod 700 gradlew"
+                sh "chmod 700 gradlew"
                 sh "sed --in-place s/P35537/test-sample-1/g src/main/resources/application.properties"
                 sh "docker build ./ -t ${IMAGENAME}-$BUILD_NUMBER"
             }
