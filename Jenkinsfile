@@ -29,9 +29,6 @@ pipeline {
                 echo "Wait fo test container start up"
                 sh "sleep 2m"
                 sh "curl -v --fail http://localhost:8080/product/api/product"
-                script {
-                    docker.rm
-                }
             }
             post {
                 always {
