@@ -43,8 +43,7 @@ pipeline {
                     def image = docker.build("${DEPLOYIMAGE}:${DEPLOYTAG}", "-f Dockerfile.deploy .")
                     image.push()
                 }
-                sh "chmod 700 deploy_script/applydeployment.sh"
-                sh "./deploy_script/applydeployment.sh deploy_script/exp-product-v1.tmpl"
+                sh "/home/di_sun/kube_projects/exp/scripts/applydeployment.sh /home/di_sun/kube_projects/exp/deployments/exp-product-v1.tmpl"
                 sh "curl -v --fail https://test.splitthebill.ml"
             }
         }
