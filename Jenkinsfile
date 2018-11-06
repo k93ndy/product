@@ -19,18 +19,21 @@ pipeline {
         }
         stage('Build container for local test and make a curl test') {
             environment {
-                //TIMESTAMP = sh(script: 'date +%s', returnStdout: true)
                 IMAGENAME = "exp-product"
             }
             steps {
                 sh "docker stop product_FirstPipeline || true && docker rm product_FirstPipeline || true"
                 sh "docker build ./ -t exp-product-$BUILD_NUMBER"
                 sh "docker run -d --network host --name product_FirstPipeline exp-product-$BUILD_NUMBER"
-                echo "Sleep 2 minutes waiting test container start up"
+                echo "Wait fo test container start up"
                 sh "sleep 2m"
-                sh "curl -v http://localhost:8080/product/api/product"
-                sh "docker stop product_FirstPipeline"
-                sh "docker rm product_FirstPipeline"
+                sh "curl -v --fail http://localhost:8080/product/api/product"
+            }
+            post {
+                always {
+                    sh "docker stop product_FirstPipeline || true"
+                    sh "docker rm product_FirstPipeline || true"
+                }
             }
         }
         stage('Build container for integration test') {
