@@ -39,9 +39,7 @@ pipeline {
                 always {
                     sh "docker stop product_FirstPipeline || true"
                     sh "docker rm product_FirstPipeline || true"
-                    script {
-                        docker.rmi("${TESTIMAGE}:${TESTTAG}")
-                    }
+                    sh "docker rmi ${TESTIMAGE}:${TESTTAG}"
                 }
             }
         }
