@@ -34,7 +34,7 @@ pipeline {
                 always {
                     sh "docker stop product_FirstPipeline || true"
                     sh "docker rm product_FirstPipeline || true"
-                    sh "docker image ls | grep '<none>' | awk '{print $3}' | xargs docker rmi"
+                    sh "docker image ls | grep '<none>' | awk '{print \$3}' | xargs docker rmi || true"
                     script {
                         docker.rmi("${TESTIMAGE}:${TESTTAG}")
                     }
