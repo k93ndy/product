@@ -23,7 +23,7 @@ pipeline {
                 }
             }
         }
-        stage('Start test container and make a curl test') {        
+        stage('Test container local test') {        
             steps {
                 sh "docker run -d -p 8080:8080 --name product_FirstPipeline ${TESTIMAGE}:${TESTTAG}"
                 echo "Wait fo test container starting up"
@@ -37,7 +37,7 @@ pipeline {
                 }
             }
         }
-        stage('Build container for deploy') {
+        stage('Build, deploy and integration test') {
             steps {
                 sh "sed --in-place s/test-sample-1/exp-sqlproxy/g src/main/resources/application.properties"
                 script {
@@ -48,6 +48,7 @@ pipeline {
                 echo "Wait for deployment upgrading"
                 sh "sleep 2m"
                 sh "kubectl get pods"
+                sh "kubectl get svc"
                 sh "kubectl get ep"
                 sh "curl -v --fail https://test.splitthebill.ml"
             }
