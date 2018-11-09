@@ -22,11 +22,6 @@ pipeline {
                     docker.build("${TESTIMAGE}:${TESTTAG}", "-f Dockerfile.test .")
                 }
             }
-            post {
-                always {
-                    sh "docker image ls | grep '<none>' | awk '{print \$3}' | xargs docker rmi || true"
-                }
-            }
         }
         stage('Test container local test') {        
             steps {
@@ -39,6 +34,7 @@ pipeline {
                 always {
                     sh "docker stop product_FirstPipeline || true"
                     sh "docker rm product_FirstPipeline || true"
+                    sh "docker image ls | grep '<none>' | awk '{print \$3}' | xargs docker rmi || true"
                     sh "docker rmi ${TESTIMAGE}:${TESTTAG}"
                 }
             }
