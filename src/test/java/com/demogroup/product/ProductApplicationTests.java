@@ -11,7 +11,7 @@ public class ProductApplicationTests {
 
 	@Test
 	public void contextLoads() {
-	  System.out.println("Execute Test#contextLoads");
+	  System.out.println("Execute ProductApplicationTests#contextLoads");
 	}
 
 }
