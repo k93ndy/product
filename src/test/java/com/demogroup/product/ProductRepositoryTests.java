@@ -23,19 +23,19 @@ public class ProductRepositoryTests {
     product.setName("TestItem");
     productRepository.save(product);
     Assert.assertNotNull(productRepository.findOneByName("TestItem"));
+    productRepository.delete(product);
+    Assert.assertNull(productRepository.findOneByName("TestItem"));
   }
   
   @Test
   public void updateTest () {
-    Product product = productRepository.findOneByName("TestItem");
+    Product product = new Product();
+    product.setName("TestItem");
+    productRepository.save(product);
+    Assert.assertNotNull(productRepository.findOneByName("TestItem"));
     product.setName("TestItemUpdated");
     productRepository.save(product);
     Assert.assertNotNull(productRepository.findOneByName("TestItemUpdated"));
-  }
-
-  @Test
-  public void deleteTest () {
-    Product product = productRepository.findOneByName("TestItemUpdated");
     productRepository.delete(product);
     Assert.assertNull(productRepository.findOneByName("TestItemUpdated"));
   }
